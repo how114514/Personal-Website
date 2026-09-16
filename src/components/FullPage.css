@@ -1,0 +1,184 @@
+/* 整屏分页：滚动容器 / 页面外壳 / 右侧页码指示器 */
+
+.pages {
+  position: fixed;
+  inset: 0;
+  z-index: 1; /* 星云(-1)之上，导航(50)与飞机层(60)之下 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.pages::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- 单页 ---------- */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-height) + 28px) 0 72px;
+}
+
+/* 首页（Hero + 飞机小游戏）：自身就是满屏布局，不加页边距 */
+.page--hero {
+  padding: 0;
+}
+
+/* 内容在视口内垂直居中，页脚留在页底 */
+.page__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 分页之后，页与页的分隔由翻页本身承担，区块不再自带内边距与顶边线 */
+.page .section {
+  padding: 0;
+  border-top: none;
+}
+
+.page .section + .section {
+  margin-top: 56px;
+}
+
+/* 视口高度不足时（矮屏 / 缩放）页面自然变高，由容器滚动读完 */
+@media (max-height: 620px) {
+  .page {
+    justify-content: flex-start;
+  }
+}
+
+/* ---------- 右侧页码指示器 ---------- */
+
+.pager {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45; /* 低于顶部导航(50)，保证导航永远在最上层 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.pager__num--current {
+  color: var(--accent-soft);
+}
+
+.pager__dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pager__dot {
+  width: 30px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pager__dot::before {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 2px;
+  background: var(--border-strong);
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.pager__dot:hover::before {
+  background: var(--text-secondary);
+}
+
+.pager__dot.is-active::before {
+  width: 22px;
+  background: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .pager {
+    right: 8px;
+  }
+
+  .pager__dot {
+    height: 22px;
+  }
+}
+
+/* ---------- 返回最上 ---------- */
+
+.to-top {
+  position: fixed;
+  right: 172px;
+  bottom: 184px;
+  z-index: 45; /* 与页码指示器同层，低于顶部导航(50) */
+  display: grid;
+  place-items: center;
+  width: 57px;
+  height: 57px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: rgba(10, 11, 14, 0.66);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.to-top:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.to-top svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 720px) {
+  .to-top {
+    right: 8px;
+    bottom: 22px;
+    width: 51px;
+    height: 51px;
+  }
+
+  .to-top svg {
+    width: 24px;
+    height: 24px;
+  }
+}

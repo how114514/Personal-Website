@@ -1,0 +1,450 @@
+/* ==========================================================================
+   全局样式：设计变量 / 基础排版 / 布局 / 区块外壳 / 共用元素
+   组件专属样式放在各自组件的 .css 中
+   ========================================================================== */
+
+:root {
+  /* 颜色：暗色冷调，主色为蓝，文字不用纯白 */
+  --bg: #08090c;
+  --bg-elevated: #0e1117;
+  --border: #1b1f27;
+  --border-strong: #272d38;
+  --text: #d7deea;
+  --text-secondary: #98a3b8;
+  --text-muted: #6a7386;
+  --accent: #7aa2f7;
+  --accent-soft: #a3bcf2;
+  --accent-dim: #4a6ba8;
+  --ink: #070a10;
+
+  /* 字体 */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'SFMono-Regular', Consolas,
+    Menlo, monospace;
+
+  /* 布局 */
+  --content-width: 1700px; /* 页面整体横向范围 */
+  --measure: 1080px; /* 单段长文本的最大行宽，避免宽屏下行长难读 */
+  --gutter: 40px;
+  /* 顶部为悬浮导航预留的高度（导航顶端 16px + 玻璃条 54px + 一点余量） */
+  --nav-height: 76px;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 24px);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+::selection {
+  background: rgba(122, 162, 247, 0.25);
+}
+
+/* ---------- 布局 ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --gutter: 20px;
+  }
+}
+
+/* ---------- 顶部导航 ---------- */
+
+/* 悬浮导航：整层固定在视口顶部、只负责定位，玻璃条本体是里面的 .nav__bar。
+   整层 pointer-events: none，条形以外的区域不拦截页面点击。 */
+.nav {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 50; /* 高于分页容器(1)与页码指示器(45)，低于飞机层(60) */
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--gutter);
+  pointer-events: none;
+}
+
+/* 磨砂玻璃条。
+   底色用上亮下暗的浅渐变而不是纯半透明深色：第一页背后只有纯色星空，
+   没有内容可模糊时也能靠渐变和描边立出边界，不会和页面底色糊在一起。 */
+.nav__bar {
+  pointer-events: auto;
+  width: 100%;
+  max-width: var(--content-width); /* 与正文容器左右对齐，只留 --gutter 的边距 */
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(10, 11, 14, 0.66);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+/* 不支持 backdrop-filter 时用接近不透明的深色底，保持同样的悬浮轮廓 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav__bar {
+    background: rgba(12, 13, 16, 0.94);
+  }
+}
+
+.nav__brand {
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.nav__brand span {
+  color: var(--text-muted);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav__links::-webkit-scrollbar {
+  display: none;
+}
+
+.nav__link {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.nav__link:hover {
+  color: var(--text);
+}
+
+/* 当前所在页对应的菜单项 */
+.nav__link.is-current {
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .nav__brand {
+    font-size: 12px;
+  }
+
+  .nav__links {
+    gap: 16px;
+  }
+}
+
+/* ---------- 区块外壳 ---------- */
+
+.section {
+  border-top: 1px solid var(--border);
+  padding: 96px 0;
+}
+
+.section--first {
+  border-top: none;
+}
+
+.section__head {
+  position: relative;
+  margin-bottom: 44px;
+  padding-bottom: 18px;
+}
+
+/* 英文大字：只描边不填充，压在中文标题上方，不抢正文的视觉重量。
+   外层 overflow: hidden 是进场遮罩的裁切框。
+   内缩 0.1em 再负 margin 补回来，避免字形上下被裁掉。 */
+.section__display {
+  display: block;
+  overflow: hidden;
+  padding: 0.1em 0.06em;
+  margin: -0.1em -0.06em 0;
+}
+
+.section__display-inner {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(46px, 7.5vw, 92px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(122, 162, 247, 0.3);
+  user-select: none;
+}
+
+.section__row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.section__index {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.section__title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* 分隔线做成独立元素，进场时从左往右展开 */
+.section__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border-strong);
+  transform-origin: 0 50%;
+}
+
+/* ---------- 共用元素 ---------- */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose p {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* 圆点列表（简历 bullet 的网页化） */
+.bullet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: var(--measure);
+}
+
+.bullet-list li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--text-secondary);
+}
+
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+/* 要点标题（简历「核心玩法：」这类前缀） */
+.bullet-list b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 元信息行：等宽小字 */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: var(--measure);
+  gap: 10px 28px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* 翻页箭头：底部居中的圆形按钮，点击由 FullPage 拦截锚点后翻页。
+   定位相对所在的 .page（首页是 .hero），首页再单独覆盖 bottom。 */
+.page-arrow {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: var(--accent-soft);
+  border: 1px solid rgba(122, 162, 247, 0.28);
+  border-radius: 50%;
+  background: rgba(122, 162, 247, 0.06);
+  transition: color 0.15s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.page-arrow svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: page-arrow-bob 2.2s ease-in-out infinite;
+}
+
+.page-arrow:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(122, 162, 247, 0.12);
+}
+
+@keyframes page-arrow-bob {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-arrow svg {
+    animation: none;
+  }
+}
+
+/* 主要按钮：项目卡片的「开始游戏」与试玩页的「返回」共用。
+   语言与 .page-arrow / .hero__eyebrow 一致：等宽小字 + 主色细描边 + 3px 圆角。 */
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--accent);
+  border: 1px solid rgba(122, 162, 247, 0.28);
+  border-radius: 3px;
+  background: rgba(122, 162, 247, 0.06);
+  padding: 6px 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.play-btn:hover {
+  color: var(--accent-soft);
+  border-color: var(--accent);
+  background: rgba(122, 162, 247, 0.12);
+}
+
+.play-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 次要按钮（试玩页返回）：压低到正文色，不抢「开始游戏」的注意力 */
+.play-btn--back {
+  color: var(--text-secondary);
+}
+
+/* 标签 */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 3px 10px;
+}
+
+/* ---------- 页脚 ---------- */
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0 40px;
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--text-muted);
+}
+
+.footer a:hover {
+  color: var(--accent);
+}

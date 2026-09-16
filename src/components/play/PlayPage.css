@@ -1,0 +1,266 @@
+/* 独立试玩页：沿用站点的暗色冷调 + 等宽小字 + 细描边语言，
+   .play-btn 是全站共用的按钮样式，试玩页与 Unity 错误提示都用它。
+
+   整页锁一屏：高度写死 100vh 且 overflow: hidden，
+   游戏区吃掉剩余高度，说明文字排在下面固定的位置，页面不会出现滚动条。 */
+
+.play {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* ---------- 顶栏 ---------- */
+
+.play__bar {
+  flex: 0 0 auto;
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10, 11, 14, 0.66);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .play__bar {
+    background: rgba(12, 13, 16, 0.94);
+  }
+}
+
+.play__bar-inner {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 14px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.play__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.play__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.play__subtitle {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.play__brand {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.play__brand span {
+  color: var(--text-muted);
+}
+
+/* ---------- 主体：游戏吃掉剩余高度 ---------- */
+
+.play__main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  padding: 20px 0 22px;
+}
+
+.play__inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* 游戏容器：在剩余空间里等比放下 16:9。
+   用容器查询拿到可用高度，宽度取「容器宽」与「容器高换算出的宽」中较小者，
+   这样两边都被约束到，既不会变形也不会撑出滚动条。
+   （靠 max-height 反向压宽度不可靠：宽度是确定值时不会被压。） */
+.play__stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+}
+
+.play__stage > * {
+  width: 100%;
+  max-width: calc(100cqh * 16 / 9);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: #000;
+  overflow: hidden;
+}
+
+.play__tip {
+  flex: 0 0 auto;
+  max-width: var(--measure);
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ---------- 玩法说明 ---------- */
+
+/* 栏数按宽度自适应：两个游戏栏数不同，不写死列数 */
+.play__guide {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.play__guide-title {
+  margin: 0 0 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.play__guide-text {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.play__guide-text:last-child {
+  margin-bottom: 0;
+}
+
+.play__guide-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.play__guide-text + .play__guide-list {
+  margin-top: 7px;
+}
+
+/* 按键条目：等宽描边小标签 + 说明 */
+.play__guide-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.play__guide-key b {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+/* 标签流末尾的「等」：不套框，跟着标签一起换行 */
+.play__guide-trailing {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 1px 0;
+}
+
+/* 无「：」的条目（强化项这类）：纯标签，和站内 .tag 一致 */
+.play__guide-tag {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+
+.play__missing {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.play__status {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 响应式 ---------- */
+
+/* 窄屏或矮屏放不下「游戏 + 说明」时解除锁屏，宁可滚动也不裁掉内容 */
+@media (max-width: 900px), (max-height: 620px) {
+  .play {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .play__main {
+    padding: 20px 0 40px;
+  }
+
+  .play__stage {
+    container-type: normal;
+  }
+
+  .play__stage > * {
+    max-width: 100%;
+  }
+
+  .play__guide {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .play__bar-inner {
+    flex-wrap: wrap;
+  }
+
+  .play__brand {
+    display: none;
+  }
+
+  .play__stage > * {
+    border-radius: 8px;
+  }
+}

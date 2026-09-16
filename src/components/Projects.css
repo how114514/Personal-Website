@@ -1,0 +1,76 @@
+.projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+/* 外观（边框 / 背景 / 圆角）由 BorderGlow 提供，这里只管内边距 */
+.project {
+  padding: 30px 34px 32px;
+}
+
+.project__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.project__name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.project__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.project__type {
+  color: var(--text-secondary);
+}
+
+/* 卡片宽度本身就小于 --measure，这里放开限制让内容填满卡片 */
+.project .bullet-list {
+  max-width: none;
+}
+
+/* 试玩入口：按钮样式复用 index.css 的 .play-btn，这里只管排布 */
+.project__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.project__actions-note {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 1200px) {
+  .projects {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .project {
+    padding: 22px 20px 24px;
+  }
+}

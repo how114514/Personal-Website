@@ -1,0 +1,7 @@
+.code-texture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}

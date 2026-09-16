@@ -1,0 +1,34 @@
+/* 关于：个人概况 + 教育背景（合并为同一区块） */
+
+.about__scope {
+  margin-top: 24px;
+}
+
+.about__block {
+  margin-top: 44px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.about__subtitle {
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+.about__subtitle::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: var(--accent);
+}
+
+.about__points {
+  margin-top: 18px;
+}

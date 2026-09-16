@@ -1,0 +1,176 @@
+/* 首页：满屏 Hero + 底部一栏项目入口卡片 */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--nav-height);
+  overflow: hidden;
+}
+
+.hero__main {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 34px;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  color: var(--accent-soft);
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(122, 162, 247, 0.28);
+  background: rgba(122, 162, 247, 0.06);
+  border-radius: 3px;
+  padding: 6px 15px;
+}
+
+.hero__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* 姓名：冷白到主蓝的渐变，不用纯白。
+   渐变放在内层，外层只做进场遮罩的裁切框。 */
+.hero__name {
+  margin: 0;
+  font-size: clamp(3.2rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+}
+
+.hero__name-mask {
+  display: block;
+  overflow: hidden;
+  /* 内缩一点再负 margin 补回来，字形上下缘不被裁掉 */
+  padding: 0.1em 0.06em;
+  margin: -0.1em -0.06em;
+}
+
+.hero__name-inner {
+  display: block;
+  background-image: linear-gradient(
+    104deg,
+    #eef3ff 0%,
+    #cddcf8 38%,
+    #93b3f2 72%,
+    #7aa2f7 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero__title {
+  margin: 22px 0 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.05rem, 1.9vw, 1.4rem);
+  color: var(--accent-soft);
+  letter-spacing: 0.1em;
+}
+
+.hero__title::before {
+  content: '';
+  display: inline-block;
+  width: 34px;
+  height: 1px;
+  margin-right: 14px;
+  vertical-align: middle;
+  background: var(--accent-dim);
+}
+
+.hero__intro {
+  max-width: 34em;
+  margin: 30px 0 0;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+/* ---------- 四组小信息 ---------- */
+
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px 64px;
+  margin: 52px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero__stat-value {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--accent-soft);
+}
+
+.hero__stat-label {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+/* ---------- 翻页箭头 ---------- */
+
+/* 外观在 index.css 的 .page-arrow 里，这里只管首页的定位 */
+.hero__arrow {
+  bottom: calc(var(--gutter) * 0.8);
+}
+
+/* ---------- 响应式 ---------- */
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero__main {
+    padding-top: 72px;
+    padding-bottom: 56px;
+  }
+
+  .hero__intro {
+    font-size: 16.5px;
+  }
+
+  .hero__stats {
+    gap: 22px 40px;
+    margin-top: 40px;
+  }
+
+  .hero__stat-value {
+    font-size: 24px;
+  }
+
+  .hero__arrow {
+    position: static;
+    transform: none;
+    margin: 0 auto 40px;
+  }
+}
