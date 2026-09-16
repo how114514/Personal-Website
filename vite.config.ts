@@ -23,6 +23,12 @@ function spaFallback(): Plugin {
 }
 
 export default defineConfig({
+  /**
+   * GitHub Pages 的项目站点部署在 https://<用户名>.github.io/<仓库名>/ 下，
+   * 资源必须带这个前缀才加载得到。仓库改名时同步改这里（大小写敏感）。
+   * dev / preview 会自动处理 base 前缀，本地开发不受影响。
+   */
+  base: '/Personal-Website/',
   plugins: [react(), spaFallback()],
   server: {
     port: 5173,

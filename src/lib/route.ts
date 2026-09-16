@@ -6,9 +6,24 @@ import { useEffect, useState } from 'react'
  * 也不会和 FullPage 已有的站内锚点（#projects 这类）打架。
  */
 
+/** Vite 的 BASE_URL，部署到 GitHub Pages 子路径时形如 /Personal-Website/ */
+const BASE = import.meta.env.BASE_URL
+
+/**
+ * 去掉部署子路径前缀，拿到站内路由（/、/play/xxx）。
+ * BASE 以 / 结尾，减 1 是为了保留路由开头的 /；根路径部署时 BASE 为 /，原样返回。
+ */
+const stripBase = (pathname: string) =>
+  pathname.startsWith(BASE) ? pathname.slice(BASE.length - 1) : '/'
+
+/** 给站内路由补上部署子路径，用于 pushState 与 <a href> */
+export function withBase(path: string) {
+  return BASE === '/' ? path : BASE.replace(/\/$/, '') + path
+}
+
 const normalize = (path: string) => path.replace(/\/+$/, '') || '/'
 
-const read = () => normalize(window.location.pathname)
+const read = () => normalize(stripBase(window.location.pathname))
 
 export function useRoute() {
   const [path, setPath] = useState(read)
@@ -25,7 +40,7 @@ export function useRoute() {
 /** 前进到某个站内路径（不会重新加载页面） */
 export function navigate(to: string) {
   if (normalize(to) === read()) return
-  window.history.pushState(null, '', to)
+  window.history.pushState(null, '', withBase(to))
   window.dispatchEvent(new PopStateEvent('popstate'))
 }
 

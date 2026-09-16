@@ -2,7 +2,7 @@ import type { MouseEvent } from 'react'
 import BorderGlow from './BorderGlow'
 import Section from './Section'
 import { projects } from '../data/resume'
-import { markFromSite, navigate, savePagesScroll } from '../lib/route'
+import { markFromSite, navigate, savePagesScroll, withBase } from '../lib/route'
 import './Projects.css'
 
 /** 开始游戏：先记下当前滚动位置，再跳到独立试玩页，返回时能回到原位 */
@@ -55,7 +55,7 @@ export default function Projects() {
                 <footer className="project__actions">
                   <a
                     className="play-btn"
-                    href={project.play}
+                    href={withBase(project.play)}
                     onClick={(e) => startGame(e, project.play!)}
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true">
